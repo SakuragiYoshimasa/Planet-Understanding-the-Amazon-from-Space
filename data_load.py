@@ -4,7 +4,7 @@ import numpy as np
 from skimage import io
 import rasterio
 from skimage import io
-
+from skimage import transform
 
 CLASS_LABEL_TO_INDEX = {
     'agriculture':0, 'artisinal_mine':1, 'bare_ground':2, 'blooming':3, 'blow_down':4,
@@ -30,6 +30,7 @@ def load_train():
         row['tags'] = tags_vec
     return df
 
+
 def load_image(img_name):
 
     if 'tif' in img_name:
@@ -38,6 +39,34 @@ def load_image(img_name):
     else:
         path = os.path.join('input/train-jpg', img_name)
         img = io.imread(path)
+        return img
+
+def load_image_min(img_name):
+    if 'tif' in img_name:
+        path = os.path.join('input/train-tif-v2', img_name)
+        img = io.imread(path)
+        img = transform.resize(img, (100, 100), mode='reflect')
+        return img
+    else:
+        path = os.path.join('input/train-jpg', img_name)
+        img = io.imread(path)
+        img = transform.resize(img, (100, 100), mode='reflect')
+        return img
+
+def load_test_image(img_name):
+    if 'tif' in img_name:
+        path = os.path.join('input/fixed', img_name)
+        img = io.imread(path)
+        img = transform.resize(img, (100, 100), mode='reflect')
+        return img
+    else:
+        if 'file' in img_name:
+            path = os.path.join('input/test-jpg-additional', img_name)
+        else:
+            path = os.path.join('input/test-jpg', img_name)
+
+        img = io.imread(path)
+        img = transform.resize(img, (100, 100), mode='reflect')
         return img
 
 def load_labels():
